@@ -25,6 +25,7 @@ r0=2
 rmax=2
 d_threshold=5000
 
+MIPGap=0.02
 # ----------------------- Define simulation ranges --------------------
 # POWER VALUES (12)
 P_T_values=(250 500 750 1000 1250 1500 1750 2000 2250 2500 2750 3000)
@@ -44,7 +45,7 @@ scenario=${SCENARIOS[$s_index]}
 pt=${P_T_values[$pt_index]}
 
 # ----------------------- Run MATLAB function -------------------------
-matlab -nosplash -nojvm -nodisplay -r "BH_main_fixed_normalization('$scenario','$use_case',$h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continious); exit"
+matlab -nosplash -nojvm -nodisplay -r "BH_main_fixed_normalization('$scenario','$use_case',$h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continious,$MIPGap); exit"
 
 # ----------------------- Sync results --------------------------------
 module load rclone
