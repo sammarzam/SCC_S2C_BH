@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 function [result, data, solutions] = gurobi_execution_BH_windowed( ...
     betta, normalization_UC, normalization_EC, normalization_time, ...
     total_range, A, b, sense, vtype, MIPGap, ...
@@ -408,4 +406,3 @@ solutions = [];     % (if you want incumbent history, we can add a callback late
 % Convert to doubles (defensive)
 if isfield(result,'x'), result.x = double(result.x); end
 end
->>>>>>> e2b063cc1b089e5fb1b6d4fe46a42b06d939b922
