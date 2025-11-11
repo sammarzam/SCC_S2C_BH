@@ -1,4 +1,4 @@
-function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_threshold,Hcap,P_T,m_continuous)
+function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_threshold,Hcap,P_T,m_continuous,MIPGap)
 
     global PWD;
     PWD=pwd;
@@ -429,7 +429,7 @@ function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_t
                     clear objectives
     
                 else % FULL MILP EXECUTION
-                    MIPGap=0.01;
+                    %MIPGap=0.01;
                     normUC=max_UC_betta_0;
                     if max_EC_betta_1==0
                         normEC=1;
