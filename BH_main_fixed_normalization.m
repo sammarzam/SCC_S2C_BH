@@ -458,3 +458,4 @@ function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_t
                 end  
             end
     end
+end
