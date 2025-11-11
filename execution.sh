@@ -3,9 +3,9 @@
 ##----------------------- Start job description -----------------------
 #SBATCH --partition=standard
 #SBATCH --job-name=bh_array_execution
-#SBATCH --array=1-72%8
+#SBATCH --array=1-72%12
 #SBATCH --nodes=1
-#SBATCH --mem-per-cpu=64G
+#SBATCH --mem-per-cpu=32G
 #SBATCH --time=03:15:00
 #SBATCH --time-min=03:15:00
 #SBATCH --mail-type=END
