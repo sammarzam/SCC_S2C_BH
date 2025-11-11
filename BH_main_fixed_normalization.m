@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_threshold,Hcap,P_T,m_continuous)
 
     global PWD;
@@ -1385,6 +1383,4 @@ function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_t
                 end  
             end
     end
-
->>>>>>> e2b063cc1b089e5fb1b6d4fe46a42b06d939b922
 end
