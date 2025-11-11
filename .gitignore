@@ -1,0 +1,4 @@
+# Ignore build folders
+Input_Data/
+Normalization_Data/
+Output_Data/
