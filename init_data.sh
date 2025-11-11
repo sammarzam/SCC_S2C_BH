@@ -10,6 +10,10 @@
 #SBATCH --mail-user=samuel.martinez@upm.es
 ##------------------------ End job description ------------------------
 
+module purge
+
 module load rclone
 
-rclone copy onedrive:TN_NTN_Data_A /home/w384/w384256/TN_NTN_A/Input_Data
+rclone copy onedrive:SCC_S2C_BH_Data /home/w384/w384256/SCC_S2C_BH/Input_Data
+
+rclone copy onedrive:SCC_S2C_BH_Normalization_Data /home/w384/w384256/SCC_S2C_BH/Normalization_Data

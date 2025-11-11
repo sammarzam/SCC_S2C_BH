@@ -2,7 +2,7 @@
 
 ##----------------------- Start job description -----------------------
 #SBATCH --partition=standard
-#SBATCH --job-name=tn_ntn_array_execution
+#SBATCH --job-name=bh_array_execution
 #SBATCH --array=1-72%8
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=64G
