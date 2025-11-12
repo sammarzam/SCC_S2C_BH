@@ -19,7 +19,7 @@ module load MATLAB
 # ----------------------- Simulation parameters -----------------------
 use_case="iridium"
 Hcap=10 
-m_continious=1    # 1: continuous, 0: discrete m 
+m_continuous=1    # 1: continuous, 0: discrete m 
 h3_resolution=2
 r0=2
 rmax=2
@@ -45,7 +45,7 @@ scenario=${SCENARIOS[$s_index]}
 pt=${P_T_values[$pt_index]}
 
 # ----------------------- Run MATLAB function -------------------------
-matlab -nosplash -nojvm -nodisplay -r "BH_main_fixed_normalization('$scenario','$use_case',$h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continious,$MIPGap); exit"
+matlab -nosplash -nojvm -nodisplay -r "BH_main_fixed_normalization('$scenario','$use_case',$h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continuous,$MIPGap); exit"
 
 # ----------------------- Sync results --------------------------------
 module load rclone
