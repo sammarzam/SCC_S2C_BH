@@ -9,8 +9,8 @@ outputDir='C:\Users\DOC06\OneDrive - Universidad Politécnica de Madrid\SCC_S2C_
 
 % ----------------------- Evaluation range -----------------------
 betta=0.7;
-t0_file = 861; 
-t1_file = 870;
+t0_file = 1191; 
+t1_file = 1200;
 
 % ----------------------- Simulation parameters -----------------------
 use_case="iridium"
@@ -29,6 +29,8 @@ P_T_values=[250 500 750 1000 1250 1500 1750 2000 2250 2500 2750] %3000
 % SCENARIOS (6)
 SCENARIOS={'A'; 'B'; 'C'; 'D'; 'E'; 'F'}%{'A'; 'B'; 'C'}%
 
+num_s=length(SCENARIOS);
+num_pt=length(P_T_values);
 
 for s_idx=1:num_s
     scenario=SCENARIOS{s_idx};
