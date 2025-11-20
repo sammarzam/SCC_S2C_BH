@@ -3,11 +3,11 @@
 ##----------------------- Start job description -----------------------
 #SBATCH --partition=standard
 #SBATCH --job-name=bh_array_execution
-#SBATCH --array=1-72%12
+#SBATCH --array=1-3%3
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=32G
-#SBATCH --time=06:15:00
-#SBATCH --time-min=06:15:00
+#SBATCH --time=08:15:00
+#SBATCH --time-min=08:15:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=samuel.martinez@upm.es
 ##------------------------ End job description ------------------------
@@ -27,11 +27,13 @@ d_threshold=5000
 
 MIPGap=0.04
 # ----------------------- Define simulation ranges --------------------
-# POWER VALUES (12)
-P_T_values=(250 500 750 1000 1250 1500 1750 2000 2250 2500 2750 3000)
-
+# POWER VALUES (12) 72%12
+# P_T_values=(250 500 750 1000 1250 1500 1750 2000 2250 2500 2750 3000)
+P_T_values=(1500 2500 2750)
+ 
 # SCENARIOS (6)
-SCENARIOS=('A' 'B' 'C' 'D' 'E' 'F')
+#SCENARIOS=('A' 'B' 'C' 'D' 'E' 'F')
+SCENARIOS=('D')
 num_s=${#SCENARIOS[@]}
 num_pt=${#P_T_values[@]}
 
