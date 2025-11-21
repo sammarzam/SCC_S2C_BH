@@ -25,7 +25,9 @@ r0=3
 rmax=3
 d_threshold=5000
 
-MIPGap=0.04
+# MIPGap=0.04 RES2
+MIPGap=0.10
+
 # ----------------------- Define simulation ranges --------------------
 # POWER VALUES (12) 
 P_T_values=(250 500 750 1000 1250 1500 1750 2000 2250 2500 2750 3000)
