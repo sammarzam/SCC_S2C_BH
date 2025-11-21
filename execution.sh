@@ -6,8 +6,8 @@
 #SBATCH --array=1-72%12
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=64G
-#SBATCH --time=16:15:00
-#SBATCH --time-min=16:15:00
+#SBATCH --time=18:15:00
+#SBATCH --time-min=18:15:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=samuel.martinez@upm.es
 ##------------------------ End job description ------------------------
