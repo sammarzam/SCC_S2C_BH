@@ -3,11 +3,11 @@
 ##----------------------- Start job description -----------------------
 #SBATCH --partition=standard
 #SBATCH --job-name=bh_array_execution
-#SBATCH --array=1-72%24
+#SBATCH --array=1-72%36
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=64G
-#SBATCH --time=48:15:00
-#SBATCH --time-min=48:15:00
+#SBATCH --time=60:15:00
+#SBATCH --time-min=60:15:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=samuel.martinez@upm.es
 ##------------------------ End job description ------------------------
@@ -26,7 +26,7 @@ rmax=3
 d_threshold=5000
 
 # MIPGap=0.04 RES2
-MIPGap=0.10
+MIPGap=0.2
 
 # ----------------------- Define simulation ranges --------------------
 # POWER VALUES (12) 
