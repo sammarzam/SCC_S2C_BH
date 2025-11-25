@@ -20,6 +20,18 @@ P_T_values=(250 500 750 1000 1250 1500 1750 2000 2250 2500 2750 3000)
 SCENARIOS=(A B C D E F)
 
 for scenario in "${SCENARIOS[@]}"; do
+    fname=$(printf "%s_pre_BH_[%s_res%d]_data.mat" \
+                "$scenario" "$use_case" "$h3_resolution" )
+
+    fullpath="${OUTPUT_DIR}/${fname}"
+
+        if [[ -f "$fullpath" ]]; then
+            echo "Copying $fname ..."
+            rclone copy "$fullpath" "$REMOTE"
+        else
+            echo "Missing file: $fname"
+        fi
+
     for P_T in "${P_T_values[@]}"; do
         
         fname=$(printf "%s_BH_[%s_res%d]_P_%d_mC_%d_beta_%0.2f_win_%d_%d.mat" \
