@@ -3,7 +3,7 @@
 ##----------------------- Start job description -----------------------
 #SBATCH --partition=standard
 #SBATCH --job-name=bh_array_execution
-#SBATCH --array=1-1
+#SBATCH --array=1-6%6
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=64G
 #SBATCH --time=60:15:00
@@ -29,13 +29,10 @@ d_threshold=5000
 MIPGap=0.2
 
 # ----------------------- Define simulation ranges --------------------
-# POWER VALUES (12) 
-P_T_values=700
-#P_T_values=(1500 2500 2750)
+# POWER VALUES 
+P_T_values=(2000)
  
-# SCENARIOS (6)
-SCENARIOS=('D')
-#SCENARIOS=('D')
+SCENARIOS=('A' 'B' 'C' 'D' 'E' 'F')
 num_s=${#SCENARIOS[@]}
 num_pt=${#P_T_values[@]}
 
@@ -49,7 +46,7 @@ scenario=${SCENARIOS[$s_index]}
 pt=${P_T_values[$pt_index]}
 
 # ----------------------- Run MATLAB function -------------------------
-matlab -nosplash -nojvm -nodisplay -r "BH_main_fixed_normalization('$scenario','$use_case',$h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continuous,$MIPGap); exit"
+matlab -nosplash -nojvm -nodisplay -r "pre_BH_missing_variables('$scenario','$use_case',$h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continuous,$MIPGap); exit"
 
 # ----------------------- Sync results --------------------------------
 #module load rclone

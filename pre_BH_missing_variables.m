@@ -1,4 +1,4 @@
-function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_threshold,Hcap,P_T,m_continuous,MIPGap)
+function pre_BH_missing_variables(scenario,use_case,h3_resolution,r0,rmax,d_threshold,Hcap,P_T,m_continuous,MIPGap)
 
     global PWD;
     PWD=pwd;
