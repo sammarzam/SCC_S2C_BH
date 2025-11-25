@@ -54,4 +54,4 @@ matlab -nosplash -nojvm -nodisplay -r "BH_main_fixed_normalization('$scenario','
 # ----------------------- Sync results --------------------------------
 module load rclone
 
-rclone copy /home/w384/w384256/SCC_S2C_BH/Output_Data onedrive:SCC_S2C_BH_Results
+#rclone copy /home/w384/w384256/SCC_S2C_BH/Output_Data onedrive:SCC_S2C_BH_Results
