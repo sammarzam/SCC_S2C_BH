@@ -1,5 +1,7 @@
 #!/bin/bash
 
+module load rclone
+
 export LC_ALL=C  # <<--- IMPORTANT: ensures beta = 0.70 (not 0,70)
 
 OUTPUT_DIR="/home/w384/w384256/SCC_S2C_BH/Output_Data"
