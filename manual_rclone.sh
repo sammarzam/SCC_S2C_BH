@@ -13,7 +13,7 @@ t1_file=1200
 # ----------------------- Simulation parameters -----------------------
 use_case="iridium"
 m_continuous=1
-h3_resolution=2
+h3_resolution=3
 
 # ----------------------- Define simulation ranges --------------------
 P_T_values=(250 500 750 1000 1250 1500 1750 2000 2250 2500 2750 3000)
