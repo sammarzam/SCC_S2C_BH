@@ -30,7 +30,7 @@ MIPGap=0.2
 
 # ----------------------- Define simulation ranges --------------------
 # POWER VALUES (12) 
-P_T_values=750
+P_T_values=700
 #P_T_values=(1500 2500 2750)
  
 # SCENARIOS (6)
