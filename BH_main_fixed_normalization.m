@@ -407,7 +407,7 @@ function BH_main_fixed_normalization(scenario,use_case,beams,h3_resolution,r0,rm
     % Choose window size W (in inner slots)
     W = 10*1;  
         
-    fname = sprintf('%s_pre_BH_[%s_res%d]_data.mat', scenario, use_case, h3_resolution);
+    fname = sprintf('%s_pre_BH_[%s_res%d_beams%d]_data.mat', scenario, use_case, h3_resolution,beams);
     
     save(fullfile(outputDir, fname), 'D','P','R_D','W','H','frame','P_T','number_cells','nSats','M','beams');
     
