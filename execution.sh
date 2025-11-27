@@ -56,6 +56,6 @@ pt=${P_T_values[$pt_index]}
 matlab -nosplash -nojvm -nodisplay -r "BH_main_fixed_normalization('$scenario','$use_case',$beams,$h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continuous,$MIPGap); exit"
 
 # ----------------------- Sync results --------------------------------
-#module load rclone
+module load rclone
 
 rclone copy /home/w384/w384256/SCC_S2C_BH/Output_Data_Full onedrive:SCC_S2C_BH_Results_Full
