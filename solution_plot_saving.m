@@ -1,5 +1,5 @@
 %% SOLUTION PLOTTING:
-function [max_UC_betta_0, max_EC_betta_1, max_TTS_betta_1] = solution_plot_saving(save_dir, scenario, use_case, h3_resolution, P_T, m_continuous, betta, normUC, normEC, normTTS, data_trace, x_incumbent, i_index,i_range,m_index,m_range,g_index,g_range,f_index,f_range,c_index,c_range, tlabel_g, tlabel_f, tlabel_c, t0, t1, number_cells, H, frame, M, X, D, nSats)
+function [max_UC_betta_0, max_EC_betta_1, max_TTS_betta_1] = solution_plot_saving(save_dir, scenario, use_case, h3_resolution, beams, P_T, m_continuous, betta, normUC, normEC, normTTS, data_trace, x_incumbent, i_index,i_range,m_index,m_range,g_index,g_range,f_index,f_range,c_index,c_range, tlabel_g, tlabel_f, tlabel_c, t0, t1, number_cells, H, frame, M, X, D, nSats)
 
 % save_dir: folder to write .mat (string)
 % data_trace: optional solver trace ([], or your callback data)
@@ -69,7 +69,7 @@ for s = 1:nSats
 end
 
 % --- file name & payload ---
-fname = sprintf('%s_BH_[%s_res%d]_P_%d_mC_%d_beta_%0.2f_win_%d_%d.mat',scenario,use_case, h3_resolution, P_T, m_continuous, betta, t0, t1);
+fname = sprintf('%s_BH_[%s_res%d_beams%d]_P_%d_mC_%d_beta_%0.2f_win_%d_%d.mat',scenario,use_case, h3_resolution,beams, P_T, m_continuous, betta, t0, t1);
 
 
 payload = struct();
