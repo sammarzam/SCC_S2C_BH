@@ -1,10 +1,10 @@
-function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_threshold,Hcap,P_T,m_continuous,MIPGap)
+function BH_main_fixed_normalization(scenario,use_case,beams,h3_resolution,r0,rmax,d_threshold,Hcap,P_T,m_continuous,MIPGap)
 
     global PWD;
     PWD=pwd;
 
     inputDir = fullfile(PWD, 'Input_Data');
-    outputDir = fullfile(PWD, 'Output_Data');
+    outputDir = fullfile(PWD, 'Output_Data_Full');
 
     normalizationDir = fullfile(PWD, 'Normalization_Data'); %Simulation_Results_A_framex10
 
@@ -51,8 +51,10 @@ function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_t
     
         % Demand d, sol, beams
         addpath(fullfile(inputDir,'SAT_CELL_ASSOCIATION'))
-        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_closest.mat')) % sol.x, associate satellite s to cell i at time t
+        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_beams_',num2str(beams),'_closest.mat')) % sol.x, associate satellite s to cell i at time t
         X=sol.x;
+
+
 
     elseif strcmp(scenario,'B')
     
@@ -96,7 +98,7 @@ function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_t
     
         % Demand d, sol, beams
         addpath(fullfile(inputDir,'SAT_CELL_ASSOCIATION'))
-        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_d_only.mat')) % sol.x, associate satellite s to cell i at time t
+        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_beams_',num2str(beams),'_d_only.mat')) % sol.x, associate satellite s to cell i at time t
         X=sol.x;
 
     elseif strcmp(scenario,'C')    
@@ -140,7 +142,7 @@ function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_t
     
         % Demand d, sol, beams
         addpath(fullfile(inputDir,'SAT_CELL_ASSOCIATION'))
-        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_d.mat')) % sol.x, associate satellite s to cell i at time t
+        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_beams_',num2str(beams),'_d.mat')) % sol.x, associate satellite s to cell i at time t
         X=sol.x;
    
     elseif strcmp(scenario,'D')
@@ -176,7 +178,7 @@ function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_t
     
         %Demand d, sol, beams
         addpath(fullfile(inputDir,'SAT_CELL_ASSOCIATION'))
-        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_closest.mat')) % sol.x, associate satellite s to cell i at time t
+        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_beams_',num2str(beams),'_closest.mat')) % sol.x, associate satellite s to cell i at time t
         X=sol.x;
     
         % ASSIGN FULL BAND TO NON ILLUMINATED CELLS TO FORCE THE DEACTIVATION
@@ -221,7 +223,7 @@ function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_t
         
         % Demand d, sol, beams
         addpath(fullfile(inputDir,'SAT_CELL_ASSOCIATION'))
-        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_d_only.mat')) % sol.x, associate satellite s to cell i at time t
+        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_beams_',num2str(beams),'_d_only.mat')) % sol.x, associate satellite s to cell i at time t
         X=sol.x;
         
         % ASSIGN FULL BAND TO NON ILLUMINATED CELLS TO FORCE THE DEACTIVATION
@@ -264,7 +266,7 @@ function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_t
         
         % Demand d, sol, beams
         addpath(fullfile(inputDir,'SAT_CELL_ASSOCIATION'))
-        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_d.mat')) % sol.x, associate satellite s to cell i at time t
+        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_beams_',num2str(beams),'_d.mat')) % sol.x, associate satellite s to cell i at time t
         X=sol.x;
         
         % ASSIGN FULL BAND TO NON ILLUMINATED CELLS TO FORCE THE DEACTIVATION
@@ -308,7 +310,7 @@ function BH_main_fixed_normalization(scenario,use_case,h3_resolution,r0,rmax,d_t
     % 
     % % Demand d, sol, beams
     % addpath([PWD,'\..\SAT_CELL_ASSOCIATION'])
-    % load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_bw.mat')) % sol.x, associate satellite s to cell i at time t
+    % load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_beams_',num2str(beams),'_bw.mat')) % sol.x, associate satellite s to cell i at time t
     % X=sol.x;
     % 
     % Result_Folder='Simulation_Results_F_V4_framex10_d0_mC_normA';

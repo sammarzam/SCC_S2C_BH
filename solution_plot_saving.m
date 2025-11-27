@@ -89,7 +89,10 @@ payload.c             = c_val;
 % derived served demand
 payload.d = d_val;     % d(c,t) reconstructed
 
-save(fullfile(save_dir, fname), '-struct', 'payload');
+% ONLY SAVE WHEN FINAL FILE!
+if t1==Hf
+    save(fullfile(save_dir, fname), '-struct', 'payload');
+end
 
 % --- return values to the caller (for normalization passes) ---
 % Caller decides how to use them depending on beta:

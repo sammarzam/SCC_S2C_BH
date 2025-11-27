@@ -18,24 +18,26 @@ module load MATLAB
 
 # ----------------------- Simulation parameters -----------------------
 use_case="iridium"
+beams=16
 Hcap=10 
 m_continuous=1    # 1: continuous, 0: discrete m 
-h3_resolution=3
-r0=3
-rmax=3
+h3_resolution=2
+r0=2
+rmax=2
 d_threshold=5000
 
-# MIPGap=0.04 RES2
-MIPGap=0.2
+# MIPGap=0.2 RES3
+MIPGap=0.04
 
 # ----------------------- Define simulation ranges --------------------
-# POWER VALUES (12) 
-P_T_values=(250 500 750 1000 1250 1500 1750 2000 2250 2500 2750 3000)
-#P_T_values=(1500 2500 2750)
+# POWER VALUES (9) 
+P_T_values=(50 150 250 500 750 1000 1500 2000 2500)
+#P_T_values=(250 500 750 1000 1250 1500 1750 2000 2250 2500 2750 3000)
+
  
 # SCENARIOS (6)
 SCENARIOS=('A' 'B' 'C' 'D' 'E' 'F')
-#SCENARIOS=('D')
+
 num_s=${#SCENARIOS[@]}
 num_pt=${#P_T_values[@]}
 
@@ -49,7 +51,7 @@ scenario=${SCENARIOS[$s_index]}
 pt=${P_T_values[$pt_index]}
 
 # ----------------------- Run MATLAB function -------------------------
-matlab -nosplash -nojvm -nodisplay -r "BH_main_fixed_normalization('$scenario','$use_case',$h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continuous,$MIPGap); exit"
+matlab -nosplash -nojvm -nodisplay -r "BH_main_fixed_normalization('$scenario','$use_case',$beams,$h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continuous,$MIPGap); exit"
 
 # ----------------------- Sync results --------------------------------
 #module load rclone
