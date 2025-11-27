@@ -448,7 +448,7 @@ function BH_main_fixed_normalization(scenario,use_case,beams,h3_resolution,r0,rm
                     [res, data, solutions] = gurobi_execution_BH_windowed(betta, normUC, normEC, normTTS, total_range, A, b, sense, vtype, MIPGap, mip_start, lb, ub, i_index, i_range, m_index, m_range, g_index, g_range, f_index, f_range, c_index, c_range, t_row_label, tlabel_i, tlabel_m, tlabel_g, tlabel_f, tlabel_c, t_current, W, R_D);
                     cd (PWD)
                     xrow = res.x(:)';  % incumbent row (1 × total_range)
-                    [~,~,~]= solution_plot_saving(outputDir, scenario, use_case, h3_resolution,  P_T, m_continuous, betta, normUC, normEC, normTTS, data, xrow, i_index,i_range,m_index,m_range,g_index,g_range,f_index,f_range,c_index,c_range, tlabel_g, tlabel_f, tlabel_c,t_current, min(t_current + W - 1, H*frame), number_cells, H, frame, M, X, D, nSats);
+                    [~,~,~]= solution_plot_saving(outputDir, scenario, use_case, h3_resolution, beams, P_T, m_continuous, betta, normUC, normEC, normTTS, data, xrow, i_index,i_range,m_index,m_range,g_index,g_range,f_index,f_range,c_index,c_range, tlabel_g, tlabel_f, tlabel_c,t_current, min(t_current + W - 1, H*frame), number_cells, H, frame, M, X, D, nSats);
     
     
                     % Update incumbent (carry to next window)
