@@ -3,14 +3,16 @@
 ##----------------------- Start job description -----------------------
 #SBATCH --partition=standard
 #SBATCH --job-name=bh_array_execution
-#SBATCH --array=1-72%36
+#SBATCH --array=1-54%54
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=64G
-#SBATCH --time=60:15:00
-#SBATCH --time-min=60:15:00
+#SBATCH --time=16:15:00
+#SBATCH --time-min=16:15:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=samuel.martinez@upm.es
 ##------------------------ End job description ------------------------
+
+# 60:15:00 RES3
 
 module purge
 module load Gurobi 
@@ -56,4 +58,4 @@ matlab -nosplash -nojvm -nodisplay -r "BH_main_fixed_normalization('$scenario','
 # ----------------------- Sync results --------------------------------
 #module load rclone
 
-#rclone copy /home/w384/w384256/SCC_S2C_BH/Output_Data onedrive:SCC_S2C_BH_Results
+rclone copy /home/w384/w384256/SCC_S2C_BH/Output_Data_Full onedrive:SCC_S2C_BH_Results_Full
