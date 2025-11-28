@@ -2,12 +2,12 @@
 
 ##----------------------- Start job description -----------------------
 #SBATCH --partition=standard
-#SBATCH --job-name=bh_array_execution
+#SBATCH --job-name=pre_bh_array_execution
 #SBATCH --array=1-6%6
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=64G
-#SBATCH --time=60:15:00
-#SBATCH --time-min=60:15:00
+#SBATCH --time=0:30:00
+#SBATCH --time-min=0:30:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=samuel.martinez@upm.es
 ##------------------------ End job description ------------------------
@@ -20,10 +20,12 @@ module load MATLAB
 use_case="iridium"
 Hcap=10 
 m_continuous=1    # 1: continuous, 0: discrete m 
-h3_resolution=3
-r0=3
-rmax=3
+h3_resolution=2
+r0=2
+rmax=2
 d_threshold=5000
+
+beams=16
 
 # MIPGap=0.04 RES2
 MIPGap=0.2
@@ -46,9 +48,9 @@ scenario=${SCENARIOS[$s_index]}
 pt=${P_T_values[$pt_index]}
 
 # ----------------------- Run MATLAB function -------------------------
-matlab -nosplash -nojvm -nodisplay -r "pre_BH_missing_variables('$scenario','$use_case',$h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continuous,$MIPGap); exit"
+matlab -nosplash -nojvm -nodisplay -r "pre_BH_missing_variables('$scenario','$use_case',$beams, $h3_resolution,$r0,$rmax,$d_threshold,$Hcap,$pt,$m_continuous,$MIPGap); exit"
 
 # ----------------------- Sync results --------------------------------
-#module load rclone
+module load rclone
 
-#rclone copy /home/w384/w384256/SCC_S2C_BH/Output_Data onedrive:SCC_S2C_BH_Results
+rclone copy /home/w384/w384256/SCC_S2C_BH/Output_Data_Full onedrive:SCC_S2C_BH_Results_Full

@@ -6,16 +6,16 @@ close all
 global PWD;
 PWD=pwd;
 
-inputDir = fullfile(fileparts(PWD),'Input_Data');
-outputDir='C:\Users\DOC06\OneDrive - Universidad Politécnica de Madrid\SCC_S2C_BH_Results';
+inputDir='C:\Users\DOC06\OneDrive - Universidad Politécnica de Madrid\SCC_S2C_BH_Data';
+outputDir='C:\Users\DOC06\OneDrive - Universidad Politécnica de Madrid\SCC_S2C_BH_Results_Full';
 
 % ----------------------- Evaluation range -----------------------
 betta=0.7;
-t0_file = 861; 
-t1_file = 870;
+t0_file = 1191; 
+t1_file = 1200;
 
 t0 = 1; 
-t1 = 870;
+t1 = 1200;
 win = t0:t1;
 
 % ----------------------- Simulation parameters -----------------------
@@ -27,10 +27,15 @@ r0=2;
 rmax=2;
 d_threshold=5000;
 
+beams=16;
+
+frame_dur=0.1;
+
 % ----------------------- Define simulation ranges --------------------
 
 % POWER VALUES (12)
-P_T_values=[250 500 750 1000 1250 1500 1750 2000 2250 2500 2750] %3000
+%P_T_values=[250 500 750 1000 1250 1500 1750 2000 2250 2500 2750] %3000
+P_T_values=[50 150 250 500 750 1000 1500 2000 2500]
 
 % SCENARIOS (6)
 SCENARIOS={'A'; 'B'; 'C'; 'D'; 'E'; 'F'}%{'A'; 'B'; 'C'}%
@@ -46,12 +51,19 @@ TTS_all=zeros(num_s,num_pt);
 TTS_act_all=zeros(num_s,num_pt);
 
 Handover_all=zeros(num_s,num_pt);
+Lisl_mean_all=zeros(num_s,num_pt);
+Lisl_mean_util=zeros(num_s,num_pt);
+Lisl_max_all=zeros(num_s,num_pt);
+Lisl_max_util=zeros(num_s,num_pt);
 
 Pused_all=zeros(num_s,num_pt);
 Bused_all=zeros(num_s,num_pt);
 SE_eff_all=zeros(num_s,num_pt);
 Lights_all=zeros(num_s,num_pt);
 Served_all=zeros(num_s,num_pt);
+
+addpath(fullfile(inputDir,'SAT_ROUTING')) % R for ISL load
+load(strcat('EUR_R_K_res_',num2str(h3_resolution),'_',use_case,'.mat'));
 
 
 for s_idx=1:num_s
@@ -82,30 +94,32 @@ for s_idx=1:num_s
     % S2C: Demand d, sol, beams
     addpath(fullfile(inputDir,'SAT_CELL_ASSOCIATION'))
     if scenario=='A' || scenario=='D' % CLOSEST
-        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_closest.mat')); % sol.x, associate satellite s to cell i at time t
+        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_beams_',num2str(beams),'_closest.mat')); % sol.x, associate satellite s to cell i at time t
         X=sol.x;
     end
-    if scenario=='B' || scenario=='E' % DISTANCE ONLY
-        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_d_only.mat')); % sol.x, associate satellite s to cell i at time t
+    if scenario=='B' || scenario=='E' % DEMAND ONLY
+         load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_beams_',num2str(beams),'_d_only.mat')); % sol.x, associate satellite s to cell i at time t
         X=sol.x;
     end
 
-    if scenario=='C' || scenario=='D' % DISTANCE + ISL+ HANDOVERS
-        load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_d.mat')); % sol.x, associate satellite s to cell i at time t
+    if scenario=='C' || scenario=='F' % DEMAND + ISL+ HANDOVERS
+         load(strcat('EUR_X_res_',num2str(h3_resolution),'_',use_case,'_beams_',num2str(beams),'_d.mat')); % sol.x, associate satellite s to cell i at time t
         X=sol.x;
     end
+
+    X=(X==1); % logical!
     
     % Load pre-BH
-    fname = sprintf('%s_pre_BH_[%s_res%d]_data.mat', scenario, use_case, h3_resolution);
+    fname = sprintf('%s_pre_BH_[%s_res%d_beams%d]_data.mat', scenario, use_case, h3_resolution,beams);
     load(fullfile(outputDir, fname));
 
     for p_idx=1:num_pt
         % Specific POWER file:
         P_T=P_T_values(p_idx);
 
-        fname = sprintf('%s_BH_[%s_res%d]_P_%d_mC_%d_beta_%0.2f_win_%d_%d.mat',scenario,use_case, h3_resolution, P_T, m_continuous, betta, t0_file, t1_file);
+        fname = sprintf('%s_BH_[%s_res%d_beams%d]_P_%d_mC_%d_beta_%0.2f_win_%d_%d.mat',scenario,use_case, h3_resolution,beams, P_T, m_continuous, betta, t0_file, t1_file);
         load(fullfile(outputDir, fname)); % i,m,g,f,c,d(?)
-
+     
         % KPI calculation:
        
         %% ===============================================================
@@ -184,6 +198,101 @@ for s_idx=1:num_s
             HO_mean = NaN; HO_rate_mean = NaN; HO_dwell_mean = NaN;
         end
         
+        %% ISL LOAD CALCULATION FOR Hcap <- R, X, and d (given by BH)
+        d_bh=squeeze(sum(reshape(d, size(d,1), frame, []), 2))./(frame*frame_dur);
+        [nV, Kmax, H] = size(X);
+        [~, Hcap_check] = size(d_bh);
+        if Hcap_check ~= Hcap
+            error('d_bh has %d columns but Hcap=%d', Hcap_check, Hcap);
+        end
+        
+        Cisl=4*2.0e3.*ones(Kmax,H); % per-(k,t) ISL capacity <- fixed (ISL terminal)
+    
+        nISL_per_sat  = 4;
+        Cisl_total_sat = Cisl;                    % total per satellite
+        cap_perISL    = Cisl_total_sat / nISL_per_sat;   % per-ISL capacity (scalar)
+        
+        % ISL load per satellite and time, restricted to BH slots 1..Hcap
+        Lisl_bh = zeros(Kmax, Hcap);              % Kmax x Hcap
+        
+        for tt = 1:Hcap
+            Rt = R(:,:,tt);                       % Kmax x Kmax, same t index
+            [kNZ, sNZ, rcoeff] = find(Rt);        % nonzeros of R(:, :, tt)
+            if isempty(kNZ), continue; end
+        
+            for idx = 1:numel(kNZ)
+                k   = kNZ(idx);                   % ISL node (satellite) index
+                s   = sNZ(idx);                   % serving satellite index
+                rks = rcoeff(idx);                % R(k,s,tt)
+        
+                % cells i served by satellite s at time tt
+                cells_s = find(X(:,s,tt) > 0.5);
+                if isempty(cells_s), continue; end
+        
+                % total demand served by satellite s at time tt (using BH demand)
+                dem_s = sum(d_bh(cells_s, tt));   % same units as Cisl
+        
+                % contribution to ISL load on satellite k
+                Lisl_bh(k, tt) = Lisl_bh(k, tt) + rks * dem_s;
+            end
+        end
+        
+        % Mean load per ISL (divide satellite total load by 4)
+        meanLoad_perISL_bh = Lisl_bh / nISL_per_sat;    % Kmax x Hcap
+        
+        % Per-ISL utilization for each satellite/time in BH window
+        util_perISL_bh = meanLoad_perISL_bh ./ cap_perISL(:,1:Hcap);   % Kmax x Hcap
+        
+        %% ===== NON-ZERO LOAD FILTERING =====
+        % Satellites that ever carry *any* ISL load over BH
+        sat_has_load = any(meanLoad_perISL_bh > 0, 2);   % Kmax x 1 logical
+        
+        % Time–ISL points that actually carry load
+        nz_mask = meanLoad_perISL_bh > 0;                % Kmax x Hcap logical
+        
+        % --- Per-satellite stats BUT only over sats that have load ---
+        meanLoad_sat_all = mean(meanLoad_perISL_bh, 2);       % as before (includes zeros)
+        maxLoad_sat_all  = max(meanLoad_perISL_bh, [], 2);
+        
+        meanUtil_sat_all = mean(util_perISL_bh, 2);
+        maxUtil_sat_all  = max(util_perISL_bh, [], 2);
+        
+        % Restrict to active satellites
+        meanLoad_sat_nz = meanLoad_sat_all(sat_has_load);
+        maxLoad_sat_nz  = maxLoad_sat_all(sat_has_load);
+        
+        meanUtil_sat_nz = meanUtil_sat_all(sat_has_load);
+        maxUtil_sat_nz  = maxUtil_sat_all(sat_has_load);
+        
+        % --- Global mean/max over non-zero ISL samples only ---
+        if any(nz_mask(:))
+            nz_load = meanLoad_perISL_bh(nz_mask);   % vector of >0 loads
+            nz_util = util_perISL_bh(nz_mask);       % vector of >0 utils
+        
+            meanLoad_global_nz = mean(nz_load);
+            maxLoad_global_nz  = max(nz_load);
+        
+            meanUtil_global_nz = mean(nz_util);
+            maxUtil_global_nz  = max(nz_util);
+        else
+            meanLoad_global_nz = 0;
+            maxLoad_global_nz  = 0;
+            meanUtil_global_nz = 0;
+            maxUtil_global_nz  = 0;
+        end
+        
+        % %% ===== PRINT NON-ZERO SUMMARY =====
+        % fprintf('\n===== ISL BUSY-HOUR SUMMARY (only non-zero loads) =====\n');
+        % fprintf('Mean load   (global, >0): %.2f Mbps\n', meanLoad_global_nz);
+        % fprintf('Max  load   (global, >0): %.2f Mbps\n', maxLoad_global_nz);
+        % fprintf('Mean util   (global, >0): %.2f\n',     meanUtil_global_nz);
+        % fprintf('Max  util   (global, >0): %.2f\n\n',   maxUtil_global_nz);
+        %% ===== SAVE NON-ZERO SUMMARY =====
+        Lisl_mean_all(s_idx,p_idx)=meanLoad_global_nz;
+        Lisl_mean_util(s_idx,p_idx)=meanUtil_global_nz;
+        Lisl_max_all(s_idx,p_idx)=maxLoad_global_nz;
+        Lisl_max_util(s_idx,p_idx)=maxUtil_global_nz;
+
         
         %% POWER PROFILEs
         X_hf = repelem(X,1,1,frame);                  % [C x S x Hf]
@@ -280,7 +389,7 @@ end
 % figure
 % hold on
 % yyaxis left
-% set(gca, 'YColor', '#ea633e','FontSize',12,'YLim',[0,200],'FontName','Computer Modern');
+% set(gca, 'YColor', '#ea633e','FontSize',12,'YLim',[0,100],'FontName','Computer Modern');
 % plot(P_T_values,(UC_w_ALL(1,:)),'Color', '#d7191c', 'LineStyle', '--','LineWidth',1.5,'Marker', 'none');
 % plot(P_T_values,(UC_w_ALL(2,:)),'Color','#d7191c','LineStyle',':','LineWidth',1.5,'Marker', 'none')
 % plot(P_T_values,(UC_w_ALL(3,:)),'Color','#d7191c','LineStyle','-.','LineWidth',1.5,'Marker', 'none')
@@ -314,7 +423,7 @@ end
 figure
 hold on
 yyaxis left
-set(gca, 'YColor', '#ea633e','FontSize',12,'YLim',[0,200],'FontName','Computer Modern');
+set(gca, 'YColor', '#ea633e','FontSize',12,'YLim',[0,100],'FontName','Computer Modern');
 plot(P_T_values,(UC_w_ALL(1,:)),'Color', '#d7191c', 'LineStyle', '--','LineWidth',1.5,'Marker', 'none');
 plot(P_T_values,(UC_w_ALL(2,:)),'Color','#d7191c','LineStyle',':','LineWidth',1.5,'Marker', 'none')
 plot(P_T_values,(UC_w_ALL(3,:)),'Color','#d7191c','LineStyle','-.','LineWidth',1.5,'Marker', 'none')
@@ -348,7 +457,7 @@ xlim([250 2500])
 figure
 hold on
 yyaxis left
-set(gca, 'YColor', '#ea633e','FontSize',12,'YLim',[0,200],'FontName','Computer Modern');
+set(gca, 'YColor', '#ea633e','FontSize',12,'YLim',[0,100],'FontName','Computer Modern');
 plot(P_T_values,(UC_g_ALL(1,:)),'Color', '#d7191c', 'LineStyle', '--','LineWidth',1.5,'Marker', 'none');
 plot(P_T_values,(UC_g_ALL(2,:)),'Color','#d7191c','LineStyle',':','LineWidth',1.5,'Marker', 'none')
 plot(P_T_values,(UC_g_ALL(3,:)),'Color','#d7191c','LineStyle','-.','LineWidth',1.5,'Marker', 'none')
