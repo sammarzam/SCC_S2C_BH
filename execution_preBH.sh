@@ -3,7 +3,7 @@
 ##----------------------- Start job description -----------------------
 #SBATCH --partition=standard
 #SBATCH --job-name=pre_bh_array_execution
-#SBATCH --array=1-6%6
+#SBATCH --array=1-1%1
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=64G
 #SBATCH --time=0:30:00
@@ -34,7 +34,7 @@ MIPGap=0.2
 # POWER VALUES 
 P_T_values=(2000)
  
-SCENARIOS=('A' 'B' 'C' 'D' 'E' 'F')
+SCENARIOS=('F')
 num_s=${#SCENARIOS[@]}
 num_pt=${#P_T_values[@]}
 
