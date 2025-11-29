@@ -6,8 +6,8 @@
 #SBATCH --array=1-54%54
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=64G
-#SBATCH --time=60:15:00
-#SBATCH --time-min=60:15:00
+#SBATCH --time=40:15:00
+#SBATCH --time-min=40:15:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=samuel.martinez@upm.es
 ##------------------------ End job description ------------------------
@@ -21,16 +21,16 @@ module load MATLAB
 
 # ----------------------- Simulation parameters -----------------------
 use_case="iridium"
-beams=16
+beams=32
 Hcap=10 
 m_continuous=1    # 1: continuous, 0: discrete m 
-h3_resolution=3
-r0=3
-rmax=3
+h3_resolution=2
+r0=2
+rmax=2
 d_threshold=5000
 
-MIPGap=0.2
-# MIPGap=0.04 RES3
+#MIPGap=0.2  RES3
+MIPGap=0.04
 
 # ----------------------- Define simulation ranges --------------------
 # POWER VALUES (9) 
