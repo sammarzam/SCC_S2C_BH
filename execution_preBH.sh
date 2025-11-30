@@ -17,7 +17,7 @@ module load Gurobi
 module load MATLAB
 
 # ----------------------- Simulation parameters -----------------------
-use_case="iridium"
+use_case="starlink"
 Hcap=10 
 m_continuous=1    # 1: continuous, 0: discrete m 
 h3_resolution=2
