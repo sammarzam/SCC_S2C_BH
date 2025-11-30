@@ -30,7 +30,7 @@ rmax=2
 d_threshold=5000
 
 #MIPGap=0.2  RES3
-MIPGap=0.04
+MIPGap=0.0001
 
 # ----------------------- Define simulation ranges --------------------
 # POWER VALUES (9) 
