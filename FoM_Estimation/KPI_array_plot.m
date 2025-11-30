@@ -1,6 +1,6 @@
 clc
 clear all
-close all
+% close all
 
 
 global PWD;
@@ -20,11 +20,12 @@ win = t0:t1;
 
 % ----------------------- Simulation parameters -----------------------
 use_case="iridium"
+
 Hcap=10;
 m_continuous=1;   % 1: continuous, 0: discrete m 
-h3_resolution=3;
-r0=3;
-rmax=3;
+h3_resolution=2;
+r0=2;
+rmax=2;
 d_threshold=5000;
 
 beams=16;
@@ -558,4 +559,121 @@ hold off
 xlim([250 2500])
 
 
+% P=f−1(UC)
+% INPUTS:
+%   P_T_values   -> 1xN power vector
+%   UC_w_ALL     -> 6xN UC profiles for scenarios A..F
+
+scenarioLabels = {'A','B','C','D','E','F'};
+UC_colors  = {'#d7191c', '#d7191c', '#d7191c', ...
+              '#fdae61', '#fdae61', '#fdae61'};
+Lstyles = {'--',':','-.'};
+
+% --- Step 1. UC range per scenario ---
+UC_min_each = zeros(6,1);
+UC_max_each = zeros(6,1);
+
+for j = 1:6
+    UC_j = UC_g_ALL(j,:);
+    UC_min_each(j) = min(UC_j);
+    UC_max_each(j) = max(UC_j);
+end
+
+% --- Step 2. Common UC grid ---
+UC_min_common = max(UC_min_each);
+UC_max_common = min(UC_max_each);
+UC_grid_common = linspace(UC_min_common, UC_max_common, 200);
+
+% Preallocate: P_of_UC_all(scenario, UC_index)
+P_of_UC_all = nan(6, numel(UC_grid_common));
+
+figure; hold on;
+for j = 1:6
+    
+    UC_j = UC_g_ALL(j,:);
+    P_j  = P_T_values;
+    
+    [UC_sorted, idx] = sort(UC_j);
+    P_sorted = P_j(idx);
+
+    [UC_unique, ia] = unique(UC_sorted);
+    P_unique = P_sorted(ia);
+
+    % Interpolate to common UC grid
+    P_of_UC = interp1(UC_unique, P_unique, UC_grid_common, 'pchip');
+    P_of_UC_all(j,:) = P_of_UC;
+
+    plot(UC_grid_common, P_of_UC, ...
+        'Color', UC_colors{j}, ...
+        'LineWidth', 1.7, ...
+        'LineStyle', Lstyles{mod(j-1,3)+1}, ...
+        'DisplayName', scenarioLabels{j});
+end
+
+xlabel('UC [%]','FontName','Computer Modern','FontSize',12);
+ylabel('Power [W]','FontName','Computer Modern','FontSize',12);
+title('Power as Function of UC (Common UC Grid)','FontSize',13);
+legend('Location','best','FontSize',10);
+grid on; box on;
+hold off;
+
+
+%AP Curves
+idxA = 1; idxB = 2; idxC = 3;
+idxD = 4; idxE = 5; idxF = 6;
+
+Delta_AD = P_of_UC_all(idxA,:) - P_of_UC_all(idxD,:);
+Delta_BE = P_of_UC_all(idxB,:) - P_of_UC_all(idxE,:);
+Delta_CF = P_of_UC_all(idxC,:) - P_of_UC_all(idxF,:);
+% Delta_AF = P_of_UC_all(idxA,:) - P_of_UC_all(idxF,:);
+
+figure; hold on;
+plot(UC_grid_common, Delta_AD, 'LineWidth', 1.5, 'DisplayName', 'A - D');
+plot(UC_grid_common, Delta_BE, 'LineWidth', 1.5, 'DisplayName', 'B - E');
+plot(UC_grid_common, Delta_CF, 'LineWidth', 1.5, 'DisplayName', 'C - F');
+% plot(UC_grid_common, Delta_AF, 'LineWidth', 1.5, 'DisplayName', 'C - F');
+yline(0,'k--');
+xlabel('UC [%]');
+ylabel('\Delta Power [W]');
+title('Power Difference vs UC');
+legend('Location','best');
+grid on; box on; hold off;
+
+
+
+% ISL MAX LOAD
+figure; hold on;
+
+plot(P_T_values,(Lisl_max_util(1,:)*100),'Color','#d7191c','LineStyle','--','LineWidth',1.5,'Marker', 'none')
+plot(P_T_values,(Lisl_max_util(2,:)*100),'Color','#d7191c','LineStyle',':','LineWidth',1.5,'Marker', 'none')
+plot(P_T_values,(Lisl_max_util(3,:)*100),'Color','#d7191c','LineStyle','-.','LineWidth',1.5,'Marker', 'none')
+
+plot(P_T_values,(Lisl_max_util(4,:)*100),'Color','#fdae61','LineStyle','--','LineWidth',1.5,'Marker', 'none')
+plot(P_T_values,(Lisl_max_util(5,:)*100),'Color','#fdae61','LineStyle',':','LineWidth',1.5,'Marker', 'none')
+plot(P_T_values,(Lisl_max_util(6,:)*100),'Color','#fdae61','LineStyle','-.','LineWidth',1.5,'Marker', 'none')
+
+hold off
+xlabel('Power [W]','FontSize',12,'FontName','Computer Modern')
+ylabel ('Max ISL Load [%]','FontName','Computer Modern','FontSize',12)
+legend({'A', 'B', 'C','D', 'E', 'F'})
+set(gca, 'FontSize',12,'FontName','Computer Modern');
+grid on
+box on
+hold off
+
+% HANDOVER
+figure; hold on;
+
+plot(P_T_values,(Handover_all(1,:)),'Color','black','LineStyle','--','LineWidth',1.5,'Marker', 'none')
+plot(P_T_values,(Handover_all(2,:)),'Color','black','LineStyle',':','LineWidth',1.5,'Marker', 'none')
+plot(P_T_values,(Handover_all(3,:)),'Color','black','LineStyle','-.','LineWidth',1.5,'Marker', 'none')
+
+hold off
+xlabel('Power [W]','FontSize',12,'FontName','Computer Modern')
+ylabel ('Mean Handover Number','FontName','Computer Modern','FontSize',12)
+legend({'A-D', 'B-E', 'C-F'})
+set(gca, 'FontSize',12,'FontName','Computer Modern');
+grid on
+box on
+hold off
 
