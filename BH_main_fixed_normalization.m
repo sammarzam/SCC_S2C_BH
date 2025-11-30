@@ -411,12 +411,14 @@ function BH_main_fixed_normalization(scenario,use_case,beams,h3_resolution,r0,rm
     
     save(fullfile(outputDir, fname), 'D','P','R_D','W','H','frame','P_T','number_cells','nSats','M','beams');
     
+    use_case_normalization="iridium";
+
     for t_current = 1:W:(H*frame)
             fprintf(['Evaluation of t_current=', num2str(t_current),'\n'])
             for betta=[0,1,beta]
                 if betta==0 % NORMALIZATION: max_UC_betta_0
                     % fname = sprintf('%s_BH_[%s_res%d]_P_%d_mC_%d_beta_%0.2f_win_%d_%d.mat', scenario, use_case, h3_resolution, P_T, m_continuous, betta, t_current, t_current+W-1);
-                    fname = sprintf('BH_[%s_res%d]_beta_%0.2f_win_%d_%d.mat',use_case, h3_resolution, betta, t_current, t_current+W-1); % A
+                    fname = sprintf('BH_[%s_res%d]_beta_%0.2f_win_%d_%d.mat',use_case_normalization, h3_resolution, betta, t_current, t_current+W-1); % A
 
                     load(fullfile(normalizationDir, fname),'objectives');
                     max_UC_betta_0=objectives.UC;
@@ -424,7 +426,7 @@ function BH_main_fixed_normalization(scenario,use_case,beams,h3_resolution,r0,rm
      
                 elseif betta==1 % NORMALIZATION: max_EC_betta_1, max_TTS_betta_1
                     % fname = sprintf('%s_BH_[%s_res%d]_P_%d_mC_%d_beta_%0.2f_win_%d_%d.mat', scenario, use_case, h3_resolution, P_T, m_continuous, betta, t_current, t_current+W-1);
-                    fname = sprintf('BH_[%s_res%d]_beta_%0.2f_win_%d_%d.mat',use_case, h3_resolution, betta, t_current, t_current+W-1); % A
+                    fname = sprintf('BH_[%s_res%d]_beta_%0.2f_win_%d_%d.mat',use_case_normalization, h3_resolution, betta, t_current, t_current+W-1); % A
 
                     load(fullfile(normalizationDir, fname),'objectives');
                     max_EC_betta_1=objectives.EC;

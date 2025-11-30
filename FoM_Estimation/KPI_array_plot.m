@@ -22,9 +22,9 @@ win = t0:t1;
 use_case="iridium"
 Hcap=10;
 m_continuous=1;   % 1: continuous, 0: discrete m 
-h3_resolution=2;
-r0=2;
-rmax=2;
+h3_resolution=3;
+r0=3;
+rmax=3;
 d_threshold=5000;
 
 beams=16;
