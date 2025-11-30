@@ -6,8 +6,8 @@
 #SBATCH --array=1-54%54
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=64G
-#SBATCH --time=40:15:00
-#SBATCH --time-min=40:15:00
+#SBATCH --time=60:15:00
+#SBATCH --time-min=60:15:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=samuel.martinez@upm.es
 ##------------------------ End job description ------------------------
@@ -20,8 +20,8 @@ module load Gurobi
 module load MATLAB
 
 # ----------------------- Simulation parameters -----------------------
-use_case="iridium"
-beams=32
+use_case="starlink"
+beams=16
 Hcap=10 
 m_continuous=1    # 1: continuous, 0: discrete m 
 h3_resolution=2
