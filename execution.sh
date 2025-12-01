@@ -3,7 +3,7 @@
 ##----------------------- Start job description -----------------------
 #SBATCH --partition=standard
 #SBATCH --job-name=bh_array_execution
-#SBATCH --array=1-54%54
+#SBATCH --array=1-24%24
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=64G
 #SBATCH --time=60:15:00
@@ -34,7 +34,8 @@ MIPGap=0.0001
 
 # ----------------------- Define simulation ranges --------------------
 # POWER VALUES (9) 
-P_T_values=(50 150 250 500 750 1000 1500 2000 2500)
+P_T_values=(10 20 30 40)
+# P_T_values=(50 150 250 500 750 1000 1500 2000 2500)
 #P_T_values=(250 500 750 1000 1250 1500 1750 2000 2250 2500 2750 3000)
 
  
